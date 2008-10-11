@@ -5,6 +5,7 @@ Rakefile
 lib/protocol/rca2006.rb
 lib/serial_interface.rb
 lib/serial_packet.rb
+serial_interface.gemspec
 test/test_serial_interface.rb
 test/test_serial_io.rb
 test/test_serial_packets.rb
