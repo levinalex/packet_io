@@ -1,7 +1,6 @@
 #!usr/bin/ruby
 
 require 'rubygems'
-gem 'traits', "0.8.1"
 require 'traits' # from http://www.codeforpeople.com/lib/ruby/traits/traits-0.8.1/
 
 # SerialPacket is used to define the format of Packets that

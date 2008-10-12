@@ -22,7 +22,7 @@ class String
 end
 
 module SerialInterface
-  VERSION = '0.2.3'
+  VERSION = '0.2.4'
 end
 
 # PacketIO is used to wrap data in packets and send them
