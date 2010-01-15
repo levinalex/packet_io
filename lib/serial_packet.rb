@@ -14,21 +14,21 @@ require 'traits' # from http://www.codeforpeople.com/lib/ruby/traits/traits-0.8.
 #   data_format(string)
 #      this is a string that is passed to 'pack' and 'unpack'
 #
-#   header_format(string)   
+#   header_format(string)
 #      this is the format of the header of received packets
 #      this property is used with SerialPacket.matches?
 #
 #   header_data
 #      an array that is used to decide if a given String is
-#      
+#
 module SerialPacketModule
   def self.included(other)
-    other.class_eval do 
+    other.class_eval do
 
       def initialize_from_packet(str)
-        self.data = str.unpack(self.class.data_format)      
+        self.data = str.unpack(self.class.data_format)
       end
-      
+
       def initialize(*d)
         self.data = d
       end
@@ -36,7 +36,7 @@ module SerialPacketModule
       def to_str
         self.class.header_str << self.data.pack(self.class.data_format)
       end
-      
+
       class << self
 
         # a packet can only be sent if it has a header
@@ -53,7 +53,7 @@ module SerialPacketModule
             ""
           end
         end
-        
+
         # a packet can only be received, if it has a filter-expression
         def receiveable?
           defined? header_format and header_filter
@@ -61,7 +61,7 @@ module SerialPacketModule
 
         # checks if some string conforms to the format of this packet
         #
-        # this is tested by matching the packet "header" against the 
+        # this is tested by matching the packet "header" against the
         # provided filter-expression
         #
         def matches?(str)
@@ -80,7 +80,7 @@ module SerialPacketModule
         def create(&block)
           klass = Class.new(self)
           klass.instance_eval(&block) if block
-          return klass    
+          return klass
         end
       end
     end

@@ -15,7 +15,7 @@ class TestPacketFilter < Test::Unit::TestCase
     assert_equal([], @default_packet.data)
     assert_equal("", @default_packet.to_str)
   end
-  
+
   def test_instantiate_basic_packet
     p = @default_packet_format.new ?A,?B,?C
 
@@ -29,18 +29,18 @@ class TestPacketFilter < Test::Unit::TestCase
 
     assert_equal(["Hallo"], p.data)
     assert_equal("Hallo", p.to_str)
-  end  
+  end
 
   def test_packet_create_from_str
     p = @default_packet_format.from_str("bar")
 
     assert_equal([?b,?a,?r], p.data)
   end
-  
+
   def test_packet_header
     my_packet = SerialPacket.create { header_format "CC"; header [?a,?b] }
-    
-    assert_equal([?a,?b], my_packet.header)  
+
+    assert_equal([?a,?b], my_packet.header)
   end
 
   def test_match
@@ -48,19 +48,19 @@ class TestPacketFilter < Test::Unit::TestCase
     numbers = SerialPacket.create { header_format "ss"; header_filter [-1,32767] }
     regex = SerialPacket.create{ header_format "a*"; header_filter [/foo/] }
     mixed = SerialPacket.create { header_format "@5C @2C"; header_filter [?X,?Y] }
-    
+
     assert_equal true, empty.matches?("abcde")
-    
+
     assert_equal(true, numbers.matches?("\xff\xff\xff\x7f"))
-    assert_equal(false, numbers.matches?("\xff\xff\xff\x80"))        
-    assert_equal(false, numbers.matches?("Packet with foo in it")) 
-    assert_equal(true, regex.matches?("Packet with foo in it")) 
-    assert_equal(false, regex.matches?("Packet with bar in it"))    
-    assert_equal(false, regex.matches?("\xff\xff\xff\x80"))        
+    assert_equal(false, numbers.matches?("\xff\xff\xff\x80"))
+    assert_equal(false, numbers.matches?("Packet with foo in it"))
+    assert_equal(true, regex.matches?("Packet with foo in it"))
+    assert_equal(false, regex.matches?("Packet with bar in it"))
+    assert_equal(false, regex.matches?("\xff\xff\xff\x80"))
     assert_equal true, mixed.matches?("__Y__X___")
     assert_equal false, mixed.matches?("YYYYYYY")
   end
-  
+
   class Position < SerialPacket
       header_format "CC"
       header [?P,?p]

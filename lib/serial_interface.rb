@@ -12,7 +12,7 @@ class String
   def crc_xmodem
     self.to_enum(:each_byte).inject(0) { |crc,byte|
       crc = (crc ^ (byte << 8)) % 0x10000
-      8.times { 
+      8.times {
         crc <<= 1
         crc ^= 0x1021 if crc[16] == 1
       }
@@ -27,18 +27,18 @@ end
 
 # PacketIO is used to wrap data in packets and send them
 # over a serial port or some other IO
-# 
+#
 class PacketIO
   attr_accessor :protocol_handler
-    
+
   # Takes two IO-Objects (uses "readchar" and "<<") to read and write from
   #
   def initialize(protocol, read, write = read, options = {})
     @read, @write = read, write
     @on_receive = nil
-    
+
     # Hashes contain SerialPackets that can be sent and received
-    # 
+    #
     @sendable_packets = {}
     @receivable_packets = []
 
@@ -48,23 +48,23 @@ class PacketIO
 
     # Create the receiver thread, but do not start it yet
     #
-    @receiver_thread = Thread.new do 
+    @receiver_thread = Thread.new do
       Thread.abort_on_exception = true
       Thread.stop
-      
+
       loop do
         begin
           char = @read.readchar
           @protocol_handler.add_char_to_packet(char) if char
         rescue EOFError
-          Thread.pass # there is currently nothing to read  
+          Thread.pass # there is currently nothing to read
         end
       end if @read  # no need to loop, if there is nothing to read from
     end
   end
 
   # suspends the current thread, until +num+ packets have been received
-  # the thread will be resumed after all callbacks were called 
+  # the thread will be resumed after all callbacks were called
   #
   def wait_for_packet(num_packets = 1, timeout = 10)
     begin
@@ -93,7 +93,7 @@ class PacketIO
   end
 
   # Add a type of packet, that should be checked for in the interface
-  # 
+  #
   # If a packet is received
   #
   def add_receiver(hash = {}, &block)
@@ -102,7 +102,7 @@ class PacketIO
     }
     self
   end
-  
+
   # Data to be wrapped in a packet
   #
   # there are different ways of using this method:
@@ -121,7 +121,7 @@ class PacketIO
   def send_packet(data, *args)
     options = (Hash === args.first) ? options = args.shift : {}
     data = (Symbol === data) ? @sendable_packets[data].new(*args) : data
-    
+
     @protocol_handler.send_packet(data.to_str, options)
     self
   end
@@ -137,9 +137,9 @@ class PacketIO
     @receiver_thread.join
     self
   end
-  
+
   private
-  
+
   # this method is called, when a packet should be sent
   #
   def send_callback(str)
@@ -156,7 +156,7 @@ class PacketIO
         h[:block].call( h[:packet].from_str(packet_str) )
       end
     }
-    
+
     # check if there are threads to wake up
     #
     @waiting_threads.each { |h|
@@ -170,7 +170,7 @@ end
 module SerialProtocol
   class ChecksumMismatch < RuntimeError
   end
-  
+
   class PacketReceived < Exception
   end
 end
@@ -179,7 +179,7 @@ module SerialProtocol
 
   # The classes in this section implement wrappers for specific protocols
   # to be used on a serial port
-  # 
+  #
   # They need to implement the following methods:
   #
   #  initialize(send_callback, receive_callback, option_hash = {})
@@ -189,16 +189,16 @@ module SerialProtocol
   #
   #  add_char_to_packet(char)
   #    called for each char, that is received.
-  #  
+  #
   #  send_packet(data, options)
   #    called from the application to send a packet.  The class is
-  #    expected to wrap the data in the specific packet format string and in 
+  #    expected to wrap the data in the specific packet format string and in
   #    turn call send_callback(data_str) which will take care of the actual
   #    transmission
-  # 
+  #
   # A protocol class is expected to call receive_callback(packet_str) as soon
   # as a valid packet is received
-  # 
+  #
 
 
   class LineBased
@@ -209,7 +209,7 @@ module SerialProtocol
 
     def add_char_to_packet(char)
       if /\n/ === char.chr
-        @receive_callback.call(@receive_buffer)        
+        @receive_callback.call(@receive_buffer)
         @packet_buffer = ""
       else
         @packet_buffer << char

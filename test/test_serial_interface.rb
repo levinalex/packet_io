@@ -9,20 +9,20 @@ class TestSerialInterface < Test::Unit::TestCase
   def setup
 
     @data_packet = SerialPacket.create { data_format "C*"; header [?:,?D] }
-    
+
     @io_send = StringIO.new
     @io_receive = StringIO.new
-    
+
     @sender = PacketIO.new(SerialProtocol::RCA2006, nil, @io_send)
     @receiver = PacketIO.new(SerialProtocol::RCA2006, @io_receive, nil)
   end
-  
+
   def test_send_packet
     @sender.add_sender(:data => @data_packet).run
 
     @sender.send_packet :data, ?A, ?B, ?C, ?D, ?E
     @io_send.rewind
-    
+
     assert_equal("\x65\xEB\x00\x00\a:DABCDE\2443",@io_send.read)
   end
 
@@ -39,7 +39,7 @@ class TestSerialInterface < Test::Unit::TestCase
   def test_timeout
     @receiver.on_receive { |str| @data = str }
     @receiver.run
-    
+
     Thread.new {
       Thread.pass
       @io_receive << "\x65\xEB\x00\x00\a:DABCDE\2443"

@@ -13,12 +13,12 @@ module SerialProtocol
   #    0b11111100 --> NACK packet
   #
   class RCA2006
-  
+
     STARTBYTES = "\x65\xeb"
     TYPE = {
-      :data_no_crc => 0, 
-      :data        => 0b00011111, 
-      :ack         => 0b11100011, 
+      :data_no_crc => 0,
+      :data        => 0b00011111,
+      :ack         => 0b11100011,
       :nack        => 0b11111100 }
 
     def initialize(send_callback, receive_callback, options = {})
@@ -36,7 +36,7 @@ module SerialProtocol
     def on_raw_send(&block)
       @raw_send_callback = block
     end
-    
+
     # Wrap a string into a packet
     #
     # the options-hash can be used to override the default packet format
@@ -48,7 +48,7 @@ module SerialProtocol
       checksum = options[:checksum] || ("" << counter << str.length << str).crc_xmodem
 
       @raw_send_callback.call(type, counter, data, checksum) if @raw_send_callback
-      
+
       p = "" << STARTBYTES << type << counter << str.length << str << [checksum].pack("S").reverse
 
       # send the packet, using the callback
@@ -58,7 +58,7 @@ module SerialProtocol
 
     def receive_handler(type, counter, data, checksum)
       @raw_receive_callback.call(type,counter,data,checksum) if @raw_receive_callback
-      
+
       case type
       when :ack
       when :nack
@@ -70,7 +70,7 @@ module SerialProtocol
     end
 
     # Big and ugly state machine that does most of the work
-    # 
+    #
     def add_char_to_packet(char)
       @state = :first_checksum if (@state == 0)
       case @state
@@ -78,7 +78,7 @@ module SerialProtocol
         @data = ""
         @state = ((char == STARTBYTES[0]) ? :second_startbyte : :first_startbyte)
       when :second_startbyte
-        @state = (char == STARTBYTES[1]) ? :type : 
+        @state = (char == STARTBYTES[1]) ? :type :
           # special case: first startbyte is repeated
           (char == STARTBYTES[0] ? :second_startbyte : :first_startbyte)
       when :type
@@ -102,10 +102,10 @@ module SerialProtocol
 
         crc = ("" << @counter << @length << @data).crc_xmodem
           # received a valid packet
-          
+
         if @type == :data || @type == :data_no_crc
           if @checksum == crc
-             
+
             # send ACK
             send_packet(nil, :type => :ack, :counter => @counter)
             receive_handler(@type, @counter, @data,@checksum)
@@ -120,7 +120,7 @@ module SerialProtocol
           #
           receive_handler(@type, @counter, @data, @checksum)
         end
-      end        
+      end
     end
   end
 
@@ -140,16 +140,16 @@ module SerialProtocol
       checksum = options[:checksum] || ("" << str.length << str).crc_xmodem
 
       @raw_send_callback.call(:data_no_crc, 0, data, checksum) if @raw_send_callback
-      
+
       p = "" << STARTBYTES << str.length << str << [checksum].pack("S").reverse
 
       # send the packet, using the callback
       #
       @send_callback.call(p)
     end
-    
+
     # Big and ugly state machine that does most of the work
-    # 
+    #
     def add_char_to_packet(char)
       @state = :first_checksum if (@state == 0)
       case @state
@@ -157,7 +157,7 @@ module SerialProtocol
         @data = ""
         @state = ((char == STARTBYTES[0]) ? :second_startbyte : :first_startbyte)
       when :second_startbyte
-        @state = (char == STARTBYTES[1]) ? :length : 
+        @state = (char == STARTBYTES[1]) ? :length :
           # special case: first startbyte is repeated
           (char == STARTBYTES[0] ? :second_startbyte : :first_startbyte)
       when :length
@@ -175,10 +175,10 @@ module SerialProtocol
 
         crc = ("" << @length << @data).crc_xmodem
           # received a valid packet
-          
+
         if @type == :data || @type == :data_no_crc
           if @checksum == crc
-             
+
             receive_handler(@type, @counter, @data,@checksum)
           else
             # send NACK and discard packet
@@ -190,7 +190,7 @@ module SerialProtocol
           #
           receive_handler(@type, @counter, @data, @checksum)
         end
-      end        
+      end
     end
   end
 end
