@@ -1,3 +1,6 @@
+== 0.4.0 / 2011-05-31
+  * much simpler reimplementation without threads
+
 == 0.3.0 / 2008-10-12
   * initial release
 
