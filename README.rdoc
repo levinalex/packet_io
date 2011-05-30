@@ -3,26 +3,14 @@ serial_interface
     http://levinalex.net/
 
 == DESCRIPTION:
-  
+
 serial_interface intends to be a small library that makes it easy
 to define packet based protocols over a serial link (RS232) in a
 declarative fashion.
 
-== FEATURES/PROBLEMS:
-  
-* remove dependency on traits
-* fix all the warnings
-* add some tests that test the actual functionality
-* improve the interface
-* improve the architecture
-
 == SYNOPSIS:
 
   nothing written yet
-
-== REQUIREMENTS:
-
-* traits 0.8.1
 
 == INSTALL:
 
