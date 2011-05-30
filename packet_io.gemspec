@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require 'packet_io'
 
 Gem::Specification.new do |s|
-  s.name = %q{lis}
+  s.name = %q{packet_io}
   s.version = PacketIO::VERSION
 
   s.authors = ["Levin Alexander"]
