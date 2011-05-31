@@ -1,26 +1,55 @@
-serial_interface
+# packet_io
+
     by Levin Alexander
     http://levinalex.net/
 
-== DESCRIPTION:
+## DESCRIPTION:
 
-serial_interface intends to be a small library that makes it easy
+packet_io is a small library that makes it easy
 to define packet based protocols over a serial link (RS232) in a
 declarative fashion.
 
-== SYNOPSIS:
+## SYNOPSIS:
 
-  nothing written yet
+    require 'packet_io'
 
-== INSTALL:
+    # define your protocol handler, inheriting from PacketIO::Base
+    #
+    # override `read` and `write` to implement your functionality
+    #
+    # this is a simple protocol handler that does nothing.
+    #
+    # see {PacketIO::LineBasedProtocol} for another trivial example
+    #
+    class MyNOPProtocol < PacketIO::Base
+      def receive(packet)
+        forward(packet)
+      end
 
-* not yet written
+      def write(data)
+        super(packet)
+      end
+    end
 
-== LICENSE:
+    # use your protocol. It is possible to stack multiple protocol
+    # layers on top of each other
+    #
+    stream = PacketIO.IOListener(File.open("/dev/ttyUSB0"))
+    line_based = PacketIO::LineBasedProtocol.new(stream)
+    my_protocol = MyNOPProtocol.new(line_based)
+
+
+    stream.run!
+
+## INSTALL:
+
+    gem install packet_io
+
+## LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2006-2008 Levin Alexander
+Copyright (c) 2006-2011 Levin Alexander
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
