@@ -3,12 +3,9 @@ require 'helper'
 class TestIOListener < Test::Unit::TestCase
   context "a server" do
     setup do
-      r1, w1 = IO.pipe # Server -> Client
-      r2, w2 = IO.pipe # Client -> Server
-
-      @server = PacketIO::IOListener.new(r1, w2)
+      @device, client_read, client_write = PacketIO::Test::MockServer.build
+      @server = PacketIO::IOListener.new(client_read, client_write)
       @protocol = PacketIO::LineBasedProtocol.new(@server)
-      @device = PacketIO::Test::MockServer.new(r2, w1)
     end
 
     should "exist" do
