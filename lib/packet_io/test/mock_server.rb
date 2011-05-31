@@ -1,4 +1,7 @@
 module PacketIO::Test
+
+  # a threaded reader that simulates a remote server to help testing io_listener
+  #
   class MockServer
 
     # create a new server and wire it up with a bidirectional pipe
@@ -13,14 +16,15 @@ module PacketIO::Test
 
     def initialize(read, write)
       @read, @write = read, write
-      @queue = Queue.new
-      @thread = Thread.new do
+      @write_queue = Queue.new
+
+      @writer = Thread.new do
         parse_commands
       end
     end
 
     def write(string)
-      @queue.push [:write, string]
+      @write_queue.push [:write, string]
       self
     end
 
@@ -29,12 +33,12 @@ module PacketIO::Test
     end
 
     def wait(seconds = 0.02)
-      @queue.push [:wait, seconds]
+      @write_queue.push [:wait, seconds]
       self
     end
 
     def eof
-      @queue.push [:close]
+      @write_queue.push [:close]
     end
 
 
@@ -42,7 +46,7 @@ module PacketIO::Test
 
     def parse_commands
       loop do
-        action, data = @queue.pop
+        action, data = @write_queue.pop
 
         case action
         when :close
