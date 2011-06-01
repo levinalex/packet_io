@@ -1,6 +1,6 @@
 
 module PacketIO
-  VERSION = '0.4.0.rc4'
+  VERSION = '0.4.0'
 end
 
 require 'strscan'
