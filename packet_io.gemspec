@@ -19,9 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.summary = %q{define packet based protocols in a declarative fashion}
 
-  s.add_development_dependency("shoulda", ["~> 2.11.3"])
-  s.add_development_dependency("mocha", ["~> 0.9.12"])
   s.add_development_dependency("yard", ["~> 0.7.1"])
-  s.add_development_dependency("cucumber", ["~> 0.10.3"])
 end
 
