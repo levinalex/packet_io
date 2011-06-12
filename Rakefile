@@ -7,7 +7,7 @@ require 'packet_io'
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
+  test.libs << 'test'
 end
 
 require 'yard'
