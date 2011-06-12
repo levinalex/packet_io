@@ -84,12 +84,11 @@ module PacketIO
     # @param [String] data
     #
     def receive(data)
-      @memo ||= ""
-      scanner = StringScanner.new(@memo + data)
-      while s = scanner.scan(/.*?\n/)
+      @data ||= StringScanner.new("")
+      @data = @data.concat(data)
+      while s = @data.scan(/.*?\n/)
         forward(s.strip)
       end
-      @memo = scanner.rest
       nil
     end
 
