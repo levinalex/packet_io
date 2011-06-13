@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.summary = %q{define packet based protocols in a declarative fashion}
 
+  s.add_dependency "rake"
   s.add_development_dependency("yard", ["~> 0.7.1"])
 end
 
