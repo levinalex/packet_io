@@ -1,3 +1,5 @@
+require 'thread'
+
 module PacketIO::Test
 
   # a threaded reader that simulates a remote server to help testing io_listener
