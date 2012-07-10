@@ -78,15 +78,18 @@ module PacketIO
 
 
   class LineBasedProtocol < Base
+    def initialize(*args)
+      super
+      @buffer = StringScanner.new("")
+    end
 
     # strip newlines from received data and pass on complete lines
     #
     # @param [String] data
     #
     def receive(data)
-      @data ||= StringScanner.new("")
-      @data = @data.concat(data)
-      while s = @data.scan(/.*?\n/)
+      @buffer.concat(data)
+      while s = @buffer.scan(/.*?\n/)
         forward(s.strip)
       end
       nil
