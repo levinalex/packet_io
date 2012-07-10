@@ -67,8 +67,8 @@ module PacketIO
     #
     # @return [nil]
     #
-    def receive(data)
-      forward(data)
+    def receive(*data)
+      forward(*data)
     end
 
     def forward(*data)
