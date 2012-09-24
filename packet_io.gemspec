@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.summary = %q{define packet based protocols in a declarative fashion}
 
   s.add_dependency "rake"
-  s.add_development_dependency("minitest", "~> 3.3.0")
+  s.add_development_dependency("minitest", ">= 3.3.0")
   s.add_development_dependency("yard", ["~> 0.7", "~> 0.8"])
 end
 
