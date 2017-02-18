@@ -1,3 +1,5 @@
+require "strscan"
+
 module PacketIO
 
   # a chainable IO-Listener that provides two methods:
@@ -80,7 +82,7 @@ module PacketIO
   class LineBasedProtocol < Base
     def initialize(*args)
       super
-      @buffer = StringScanner.new("")
+      @buffer = ::StringScanner.new("")
     end
 
     # strip newlines from received data and pass on complete lines

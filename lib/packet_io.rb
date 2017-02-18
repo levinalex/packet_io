@@ -1,8 +1,7 @@
 
 module PacketIO
-  VERSION = '0.4.3'
+  VERSION = '0.4.4'
 end
 
-require 'strscan'
 require 'packet_io/io_listener'
 
