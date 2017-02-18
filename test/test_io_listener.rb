@@ -1,4 +1,7 @@
-require 'helper'
+require 'minitest/autorun'
+
+require 'packet_io'
+require 'packet_io/test/mock_server'
 
 describe "a server" do
   before do
